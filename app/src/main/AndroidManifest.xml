@@ -16,7 +16,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PantryPal">
+            android:theme="@style/Theme.MaterialComponents.Light">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
