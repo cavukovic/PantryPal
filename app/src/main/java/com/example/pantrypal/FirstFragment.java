@@ -1,6 +1,7 @@
 package com.example.pantrypal;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class FirstFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.d("PantryPalDebug", "Pantry Fragment was created");
         super.onViewCreated(view, savedInstanceState);
 
         // Create sample FoodItem instances
@@ -64,21 +66,23 @@ public class FirstFragment extends Fragment {
         foodList.add(new FoodItem("Bread"));
 
 
-
-
         // Initialize RecyclerView and adapter
         RecyclerView foodRecyclerView = view.findViewById(R.id.foodRecyclerView);
         FoodAdapter adapter = new FoodAdapter(foodList);
         foodRecyclerView.setAdapter(adapter);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            }
-        });
+
+        // button removed for now
+//        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NavHostFragment.findNavController(FirstFragment.this)
+//                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+//            }
+//        });
+
     }
+
 
     @Override
     public void onDestroyView() {
