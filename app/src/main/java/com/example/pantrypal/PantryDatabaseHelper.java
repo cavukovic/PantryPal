@@ -14,7 +14,7 @@ public class PantryDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Create tables and define the schema for your database
+        // Create tables and define the schema
         db.execSQL("CREATE TABLE IF NOT EXISTS FoodItems (id INTEGER PRIMARY KEY, name TEXT)");
     }
 
