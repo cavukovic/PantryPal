@@ -96,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("PantryPalDebug", "FAB was clicked");
             }
+            // we will want to have this pull up the camera, then the user can scan the barcode
+            // then we will need to get the ingredient name and any other information
+            // from the barcode and the add that to the list the same way we did in the
+            // pantry fragment
         });
     }
 

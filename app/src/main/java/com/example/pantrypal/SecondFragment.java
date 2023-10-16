@@ -21,6 +21,18 @@ import java.util.List;
 public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
+    // we have a lot of options here, we could keep this list of
+    // recipes thing how we have it and add the ability to generate
+    // new recipes using an add recipe button and deal with deletion
+    // the same way we do in pantry
+
+    // OR
+
+    // we just make it a page with one button that says, show me a recipe
+    // that I can make and then we show that user the one recipe and we
+    // never have to deal with storing, adding, or deleting recipes.
+    // This option seems favorable as a first working product and then
+    // we can try the first option if we have time.
 
     @Override
     public View onCreateView(
