@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 
 import androidx.annotation.NonNull;
@@ -13,25 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Spinner;
 import android.util.Log;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.core.view.GravityCompat;
-import androidx.core.view.WindowCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
-import com.example.pantrypal.databinding.ActivityMainBinding;
-
-import android.view.Menu;
 import android.view.MenuItem;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -72,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("PantryPalDebug", "Pantry was clicked");
 
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new FirstFragment())
+                            .replace(R.id.fragment_container, new PantryFragment())
                             .commit();
 
                 } else if (itemId == R.id.nav_recipe) {

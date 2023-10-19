@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/AFDNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="Item Name"
+        android:ems="10"
+        android:hint="@string/itemName"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/AFDQuantityEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="number"
+        android:ems="10"
+        android:hint="@string/quantity"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/AFDUnitEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="number"
+        android:ems="10"
+        android:hint="@string/unit"
+        android:inputType="text" />
+
+</LinearLayout>

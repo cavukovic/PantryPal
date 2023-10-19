@@ -8,63 +8,46 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pantrypal.domain.FoodItem;
+
 import java.util.ArrayList;
-import java.util.List;
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.ViewHolder> {
-    private List<FoodItem> foodList = new ArrayList<>();
+public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
 
-//    public FoodAdapter(List<FoodItem> foodList) {
-//        this.foodList = foodList;
-//    }
-public interface OnItemClickListener {
-    void onItemClick(String itemName);
-}
+    ArrayList<FoodItem> foodArrayList;
 
-    private OnItemClickListener clickListener;
-
-    public FoodAdapter(List<FoodItem> foodList, OnItemClickListener clickListener) {
-        this.foodList = foodList;
-        this.clickListener = clickListener;
+    public FoodAdapter(ArrayList<FoodItem> students) {
+        this.foodArrayList = students;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item, parent, false);
-        return new ViewHolder(view);
+    public FoodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.food_item, parent, false);
+        return new FoodViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FoodItem foodItem = foodList.get(position);
-        holder.foodNameTextView.setText(foodItem.getName());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickListener.onItemClick(foodItem.getName());
-            }
-        });
-        // Add any other bindings or event handlers here
+    public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
+        holder.tvFoodName.setText(foodArrayList.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return foodList.size();
+        return foodArrayList.size();
     }
 
-    public void setData(List<FoodItem> foodList) {
-        this.foodList = foodList;
-        notifyDataSetChanged(); // Notify the adapter that the data has changed
-    }
+    static class FoodViewHolder extends RecyclerView.ViewHolder {
+        TextView tvFoodName;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView foodNameTextView;
-        // Other views as needed
-
-        public ViewHolder(@NonNull View itemView) {
+        public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodNameTextView = itemView.findViewById(R.id.foodNameTextView);
+            findViews();
+        }
+
+        private void findViews() {
+            tvFoodName = itemView.findViewById(R.id.foodNameTextView);
         }
     }
 }

@@ -4,29 +4,24 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pantrypal.databinding.FragmentFirstBinding;
+import com.example.pantrypal.domain.FoodItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class FirstFragment extends Fragment implements FoodAdapter.OnItemClickListener{
+public class PantryFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private PantryViewModel viewModel;
@@ -49,53 +44,22 @@ public class FirstFragment extends Fragment implements FoodAdapter.OnItemClickLi
         //viewModel = new ViewModelProvider(this).get(PantryViewModel.class);
         //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(PantryViewModel.class);
         Activity activity = requireActivity();
-        viewModel = new ViewModelProvider((ViewModelStoreOwner) activity).get(PantryViewModel.class);
-        viewModel.initialize(requireContext());
-
-        // create db in assets dir src main assets
-        // something run in bg to query
-        // happens in vm
-        // Create sample FoodItem instances
-//        List<FoodItem> foodList = new ArrayList<>();
-//        foodList.add(new FoodItem("Apples"));
-//        foodList.add(new FoodItem("Bananas"));
-//        foodList.add(new FoodItem("Oranges"));
-//        foodList.add(new FoodItem("Flour"));
-//        foodList.add(new FoodItem("Milk"));
-//        foodList.add(new FoodItem("Eggs"));
-//        foodList.add(new FoodItem("Cookies"));
-//        foodList.add(new FoodItem("Cereal"));
-//        foodList.add(new FoodItem("Ground Beef"));
-//        foodList.add(new FoodItem("Baking Powder"));
-//        foodList.add(new FoodItem("Coffee"));
-//        foodList.add(new FoodItem("Butter"));
-//        foodList.add(new FoodItem("Noodles"));
-//        foodList.add(new FoodItem("Salt"));
-//        foodList.add(new FoodItem("Pepper"));
-//        foodList.add(new FoodItem("Garlic Powder"));
-//        foodList.add(new FoodItem("Onion"));
-//        foodList.add(new FoodItem("Watermelon"));
-//        foodList.add(new FoodItem("Lettuce"));
-//        foodList.add(new FoodItem("Carrot"));
-//        foodList.add(new FoodItem("Cream Cheese"));
-//        foodList.add(new FoodItem("Peanut Butter"));
-//        foodList.add(new FoodItem("Jelly"));
-//        foodList.add(new FoodItem("Bread"));
-
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
 
         // Initialize RecyclerView and adapter
         RecyclerView foodRecyclerView = view.findViewById(R.id.foodRecyclerView);
-//        FoodAdapter adapter = new FoodAdapter(viewModel.getFoodItems());
-        FoodAdapter adapter = new FoodAdapter(viewModel.getFoodItems(), this); // 'this' refers to the fragment
-        foodRecyclerView.setAdapter(adapter);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Observe LiveData for changes and update the adapter
-        viewModel.getFoodItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<FoodItem>>() {
-            @Override
-            public void onChanged(List<FoodItem> foodItems) {
-                adapter.setData(foodItems); // Create a method in your adapter to set the new data
+        viewModel.getAllFoodItemsFromVm().observe(getViewLifecycleOwner(), foodItems ->
+        {
+            FoodAdapter adapter;
+            if (foodItems != null && !foodItems.isEmpty()) {
+                adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems);
+            } else {
+                adapter = new FoodAdapter(new ArrayList<>());
             }
+            foodRecyclerView.setAdapter(adapter);
         });
 
         binding.addButton.setOnClickListener(new View.OnClickListener() {
@@ -109,28 +73,31 @@ public class FirstFragment extends Fragment implements FoodAdapter.OnItemClickLi
         binding.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Handle adding ingredients
                 viewModel.deleteAllFoodItems();
-                adapter.notifyDataSetChanged(); // Refresh the RecyclerView
             }
         });
 
     }
 
     private void showAddFoodItemDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        final View textEntryView = inflater.inflate(R.layout.dialog_addfooditem, null);
+        builder.setView(textEntryView);
         builder.setTitle("Add Food Item");
 
-        final EditText input = new EditText(requireContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        final EditText nameInput = textEntryView.findViewById(R.id.AFDNameEditText);
+        final EditText quantityInput = textEntryView.findViewById(R.id.AFDQuantityEditText);
+        final EditText unitInput = textEntryView.findViewById(R.id.AFDUnitEditText);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String itemName = input.getText().toString().trim();
-                if (!itemName.isEmpty()) {
-                    viewModel.addFoodItem(itemName);
+                String name = nameInput.getText().toString().trim();
+                int quantity = Integer.parseInt(quantityInput.getText().toString().trim());
+                int unit = Integer.parseInt(unitInput.getText().toString().trim());
+                if (!name.isEmpty()) {
+                    viewModel.insertFoodItem(new FoodItem(name, quantity, unit));
                 }
             }
         });
@@ -153,7 +120,7 @@ public class FirstFragment extends Fragment implements FoodAdapter.OnItemClickLi
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                viewModel.deleteFoodItem(itemName);
+                //viewModel.deleteFoodItem(itemName);
             }
         });
 
@@ -166,12 +133,6 @@ public class FirstFragment extends Fragment implements FoodAdapter.OnItemClickLi
 
         builder.show();
     }
-
-    @Override
-    public void onItemClick(String itemName) {
-        showDeleteFoodItemDialog(itemName);
-    }
-
 
     @Override
     public void onDestroyView() {
