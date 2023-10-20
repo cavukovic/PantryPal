@@ -1,7 +1,8 @@
-package com.example.pantrypal;
+package com.example.pantrypal.ui;
 
 import android.os.Bundle;
 
+import com.example.pantrypal.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 

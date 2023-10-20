@@ -1,12 +1,10 @@
-package com.example.pantrypal;
+package com.example.pantrypal.domain;
 
-import static com.example.pantrypal.PantryPalRoomDatabase.getDatabase;
+import static com.example.pantrypal.domain.PantryPalRoomDatabase.getDatabase;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-
-import com.example.pantrypal.domain.FoodItem;
 
 import java.util.List;
 

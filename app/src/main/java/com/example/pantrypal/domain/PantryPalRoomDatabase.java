@@ -1,13 +1,10 @@
-package com.example.pantrypal;
+package com.example.pantrypal.domain;
 
 import android.content.Context;
 
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
-import com.example.pantrypal.domain.FoodItem;
-import com.example.pantrypal.domain.RecipeItem;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

@@ -1,4 +1,4 @@
-package com.example.pantrypal;
+package com.example.pantrypal.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pantrypal.R;
+import com.example.pantrypal.domain.viewmodel.RecipeViewModel;
 import com.example.pantrypal.databinding.FragmentSecondBinding;
 import com.example.pantrypal.domain.RecipeItem;
 

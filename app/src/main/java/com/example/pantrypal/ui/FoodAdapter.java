@@ -1,4 +1,4 @@
-package com.example.pantrypal;
+package com.example.pantrypal.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pantrypal.R;
 import com.example.pantrypal.domain.FoodItem;
 
 import java.util.ArrayList;

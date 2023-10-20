@@ -1,10 +1,11 @@
-package com.example.pantrypal;
+package com.example.pantrypal.domain.viewmodel;
 
 import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.pantrypal.domain.RecipeItemRepository;
 import com.example.pantrypal.domain.RecipeItem;
 
 import java.util.List;
