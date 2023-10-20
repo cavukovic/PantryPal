@@ -15,7 +15,7 @@ public class FoodItem {
 
     private int quantity;
 
-    private int unit;
+    private String unit;
     //Maybe should be enum?
     private String category;
 
@@ -24,7 +24,7 @@ public class FoodItem {
         this.name = name;
     }
 
-    public FoodItem(@NonNull String name, int quantity, int unit){
+    public FoodItem(@NonNull String name, int quantity, String unit){
         this.name = name;
         this.quantity = quantity;
         this.unit = unit;
@@ -55,11 +55,11 @@ public class FoodItem {
         this.quantity = quantity;
     }
 
-    public int getUnit() {
+    public String getUnit() {
         return unit;
     }
 
-    public void setUnit(int unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 

@@ -8,41 +8,46 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.example.pantrypal.domain.RecipeItem;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
-    private List<RecipeItem> recipeList;
+import java.util.ArrayList;
 
-    public RecipeAdapter(List<RecipeItem> recipeList) {
-        this.recipeList = recipeList;
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
+
+    ArrayList<RecipeItem> recipeArrayList;
+
+    public RecipeAdapter(ArrayList<RecipeItem> recipes) {
+        this.recipeArrayList = recipes;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_item, parent, false);
-        return new ViewHolder(view);
+    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.recipe_item, parent, false);
+        return new RecipeViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecipeItem recipeItem = recipeList.get(position);
-        holder.recipeNameTextView.setText(recipeItem.getName());
-        holder.recipeDescTextView.setText(recipeItem.getDesc());
+    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+        holder.tvRecipeName.setText(recipeArrayList.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return recipeList.size();
+        return recipeArrayList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeNameTextView;
-        TextView recipeDescTextView;
-        public ViewHolder(@NonNull View itemView) {
+    static class RecipeViewHolder extends RecyclerView.ViewHolder {
+        TextView tvRecipeName;
+
+        public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
-            recipeNameTextView = itemView.findViewById(R.id.recipeNameTextView);
-            recipeDescTextView = itemView.findViewById(R.id.recipeDescTextView);
+            findViews();
+        }
+
+        private void findViews() {
+            tvRecipeName = itemView.findViewById(R.id.recipeNameTextView);
         }
     }
 }

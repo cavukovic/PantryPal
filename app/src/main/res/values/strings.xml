@@ -52,4 +52,14 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="welcome_to_the_recipes">Welcome to the Recipes</string>
+    <string name="add_item">Add Item</string>
+    <string name="clear_pantry">Clear Pantry</string>
+    <string name="recipe_name">Recipe Name</string>
+    <string name="image_url">Image URL</string>
+    <string name="used_ingredient_count">Used Ingredient Count</string>
+    <string name="missed_ingredient_count">Missed Ingredient Count</string>
+    <string name="welcome_to_the_recipe_list">Welcome to the Recipe List</string>
+    <string name="add_recipe">Add Recipe</string>
+    <string name="clear_recipes">Clear Recipes</string>
 </resources>

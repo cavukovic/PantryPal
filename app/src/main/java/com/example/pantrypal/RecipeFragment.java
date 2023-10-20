@@ -16,15 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pantrypal.databinding.FragmentFirstBinding;
-import com.example.pantrypal.domain.FoodItem;
+import com.example.pantrypal.databinding.FragmentSecondBinding;
+import com.example.pantrypal.domain.RecipeItem;
 
 import java.util.ArrayList;
 
-public class PantryFragment extends Fragment {
+public class RecipeFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
-    private PantryViewModel viewModel;
+    private FragmentSecondBinding binding;
+    private RecipeViewModel viewModel;
 
 
     @Override
@@ -33,33 +33,33 @@ public class PantryFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        binding = FragmentSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        Log.d("PantryPalDebug", "Pantry Fragment was created");
+        Log.d("PantryPalDebug", "Recipe Fragment was created");
         super.onViewCreated(view, savedInstanceState);
-        //viewModel = new ViewModelProvider(this).get(PantryViewModel.class);
-        //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(PantryViewModel.class);
+        //viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(RecipeViewModel.class);
         Activity activity = requireActivity();
-        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
+        viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(RecipeViewModel.class);
 
         // Initialize RecyclerView and adapter
-        RecyclerView foodRecyclerView = view.findViewById(R.id.foodRecyclerView);
-        foodRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        RecyclerView recipeRecyclerView = view.findViewById(R.id.recipeRecyclerView);
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Observe LiveData for changes and update the adapter
-        viewModel.getAllFoodItemsFromVm().observe(getViewLifecycleOwner(), foodItems ->
+        viewModel.getAllRecipeItemsFromVm().observe(getViewLifecycleOwner(), recipeItems ->
         {
-            FoodAdapter adapter;
-            if (foodItems != null && !foodItems.isEmpty()) {
-                adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems);
+            RecipeAdapter adapter;
+            if (recipeItems != null && !recipeItems.isEmpty()) {
+                adapter = new RecipeAdapter((ArrayList<RecipeItem>) recipeItems);
             } else {
-                adapter = new FoodAdapter(new ArrayList<>());
+                adapter = new RecipeAdapter(new ArrayList<>());
             }
-            foodRecyclerView.setAdapter(adapter);
+            recipeRecyclerView.setAdapter(adapter);
         });
 
         binding.addButton.setOnClickListener(new View.OnClickListener() {
@@ -67,37 +67,39 @@ public class PantryFragment extends Fragment {
             public void onClick(View view) {
                 // For now this allows the user to type in an ingredient
                 // we will probably want to keep this button
-                showAddFoodItemDialog();
+                showAddRecipeItemDialog();
             }
         });
         binding.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                viewModel.deleteAllFoodItems();
+                viewModel.deleteAllRecipeItems();
             }
         });
 
     }
 
-    private void showAddFoodItemDialog() {
+    private void showAddRecipeItemDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
-        final View textEntryView = inflater.inflate(R.layout.dialog_addfooditem, null);
+        final View textEntryView = inflater.inflate(R.layout.dialog_addrecipeitem, null);
         builder.setView(textEntryView);
-        builder.setTitle("Add Food Item");
+        builder.setTitle("Add Recipe Item");
 
         final EditText nameInput = textEntryView.findViewById(R.id.AFDNameEditText);
-        final EditText quantityInput = textEntryView.findViewById(R.id.AFDQuantityEditText);
-        final EditText unitInput = textEntryView.findViewById(R.id.AFDUnitEditText);
+        final EditText imgUrlInput = textEntryView.findViewById(R.id.AFDImgUrlEditText);
+        final EditText usedIngCountInput = textEntryView.findViewById(R.id.AFDUsedIngCountEditText);
+        final EditText missedIngCountInput = textEntryView.findViewById(R.id.AFDMissedIngCountEditText);
 
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String name = nameInput.getText().toString().trim();
-                int quantity = Integer.parseInt(quantityInput.getText().toString().trim());
-                String unit = unitInput.getText().toString().trim();
+                String imgUrl = imgUrlInput.getText().toString().trim();
+                int usedIngCount = Integer.parseInt(usedIngCountInput.getText().toString().trim());
+                int missedIngCount = Integer.parseInt(missedIngCountInput.getText().toString().trim());
                 if (!name.isEmpty()) {
-                    viewModel.insertFoodItem(new FoodItem(name, quantity, unit));
+                    viewModel.insertRecipeItem(new RecipeItem(name, imgUrl, usedIngCount, missedIngCount));
                 }
             }
         });
@@ -112,15 +114,15 @@ public class PantryFragment extends Fragment {
         builder.show();
     }
 
-    private void showDeleteFoodItemDialog(final String itemName) {
+    private void showDeleteRecipeItemDialog(final String itemName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete Food Item");
+        builder.setTitle("Delete Recipe Item");
         builder.setMessage("Are you sure you want to delete this item: " + itemName + "?");
 
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //viewModel.deleteFoodItem(itemName);
+                //viewModel.deleteRecipeItem(itemName);
             }
         });
 

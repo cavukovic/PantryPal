@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/AFDNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="Recipe Name"
+        android:ems="10"
+        android:hint="@string/recipe_name"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/AFDImgUrlEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="Image URL"
+        android:ems="10"
+        android:hint="@string/image_url"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/AFDUsedIngCountEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="Used Ingredient Count"
+        android:ems="10"
+        android:hint="@string/used_ingredient_count"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/AFDMissedIngCountEditText"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:autofillHints="Missed Ingredient Count"
+        android:ems="10"
+        android:hint="@string/missed_ingredient_count"
+        android:inputType="text" />
+
+</LinearLayout>

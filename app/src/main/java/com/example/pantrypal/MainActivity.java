@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (itemId == R.id.nav_recipe) {
                     Log.d("PantryPalDebug", "Recipe was clicked");
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new SecondFragment())
+                            .replace(R.id.fragment_container, new RecipeFragment())
                             .commit();
                 }
 
