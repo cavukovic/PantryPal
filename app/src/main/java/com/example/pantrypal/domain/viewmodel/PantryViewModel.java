@@ -28,6 +28,10 @@ public class PantryViewModel extends AndroidViewModel {
         foodItemRepository.insertItem(item);
     }
 
+    public void deleteFoodItem(String itemName) {
+        foodItemRepository.deleteFoodItem(itemName);
+    }
+
     public void deleteAllFoodItems(){
         foodItemRepository.deleteAll();
     }

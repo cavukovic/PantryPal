@@ -30,4 +30,9 @@ public class FoodItemRepository {
     public void deleteAll(){
         PantryPalRoomDatabase.databaseWriteExecutor.execute(() -> foodItemDao.deleteAll());
     }
+
+    public void deleteFoodItem(String itemName) {
+        PantryPalRoomDatabase.databaseWriteExecutor.execute(() -> foodItemDao.deleteFoodItem(itemName));
+    }
+
 }

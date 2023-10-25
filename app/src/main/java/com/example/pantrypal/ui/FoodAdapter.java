@@ -17,9 +17,19 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
 
     ArrayList<FoodItem> foodArrayList;
 
-    public FoodAdapter(ArrayList<FoodItem> students) {
-        this.foodArrayList = students;
+    public interface OnItemClickListener {
+        void onItemClick(String itemName);
     }
+
+    private OnItemClickListener clickListener;
+
+    public FoodAdapter(ArrayList<FoodItem> students, OnItemClickListener clickListener) {
+
+        this.foodArrayList = students;
+        this.clickListener = clickListener;
+    }
+
+
 
     @NonNull
     @Override
@@ -32,6 +42,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         holder.tvFoodName.setText(foodArrayList.get(position).getName());
+        FoodItem foodItem = foodArrayList.get(position);
+        holder.tvFoodName.setText(foodItem.getName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onItemClick(foodItem.getName());
+            }
+        });
     }
 
     @Override

@@ -23,7 +23,9 @@ import com.example.pantrypal.domain.FoodItem;
 
 import java.util.ArrayList;
 
-public class PantryFragment extends Fragment {
+public class
+
+PantryFragment extends Fragment implements FoodAdapter.OnItemClickListener{
 
     private FragmentFirstBinding binding;
     private PantryViewModel viewModel;
@@ -51,15 +53,18 @@ public class PantryFragment extends Fragment {
         // Initialize RecyclerView and adapter
         RecyclerView foodRecyclerView = view.findViewById(R.id.foodRecyclerView);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //FoodAdapter adapter = new FoodAdapter(viewModel.getFoodItems(), this); // 'this' refers to the fragment
 
         // Observe LiveData for changes and update the adapter
         viewModel.getAllFoodItemsFromVm().observe(getViewLifecycleOwner(), foodItems ->
         {
             FoodAdapter adapter;
             if (foodItems != null && !foodItems.isEmpty()) {
-                adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems);
+                //adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems);
+                adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems, this);
             } else {
-                adapter = new FoodAdapter(new ArrayList<>());
+                //adapter = new FoodAdapter(new ArrayList<>());
+                adapter = new FoodAdapter(new ArrayList<>(), this);
             }
             foodRecyclerView.setAdapter(adapter);
         });
@@ -122,7 +127,7 @@ public class PantryFragment extends Fragment {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //viewModel.deleteFoodItem(itemName);
+                viewModel.deleteFoodItem(itemName);
             }
         });
 
@@ -134,6 +139,11 @@ public class PantryFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+    @Override
+    public void onItemClick(String itemName) {
+        showDeleteFoodItemDialog(itemName);
     }
 
     @Override
