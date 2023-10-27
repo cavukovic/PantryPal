@@ -32,6 +32,13 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -218,9 +225,29 @@ public class RecipeFragment extends Fragment {
 
     private void showRecipePopup(String recipeInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Generated Recipe");
+
 
         // Parse Json info
+        try {
+            JSONArray recipes = new JSONArray(recipeInfo);
+
+            if (recipes.length() > 0) {
+                JSONObject recipe = recipes.getJSONObject(0); // Assuming you want to display the first recipe
+                builder.setTitle(recipe.getString("title"));
+                String image = recipe.getString("image");
+                int usedIngredientCount = recipe.getInt("usedIngredientCount");
+                int missedIngredientCount = recipe.getInt("missedIngredientCount");
+
+                // Create your custom view to display the recipe information
+                View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount);
+
+                builder.setView(recipeView);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            builder.setMessage("Failed to parse recipe data");
+        }
+
 
         //builder.setMessage(recipeInfo);
         builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
@@ -231,6 +258,23 @@ public class RecipeFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+
+    private View getRecipeView(String imageUrl, int usedCount, int missedCount) {
+        View recipeView = LayoutInflater.from(requireContext()).inflate(R.layout.recipe_popup_layout, null);
+
+        // Find and set the UI elements in your custom layout
+        ImageView imageView = recipeView.findViewById(R.id.imageView);
+        TextView usedCountTextView = recipeView.findViewById(R.id.usedCountTextView);
+        TextView missedCountTextView = recipeView.findViewById(R.id.missedCountTextView);
+
+        // Load and display the image using Picasso
+        Picasso.get().load(imageUrl).into(imageView);
+        usedCountTextView.setText("Used Ingredients: " + usedCount);
+        missedCountTextView.setText("Missed Ingredients: " + missedCount);
+
+        return recipeView;
     }
 
     private void showAddRecipeItemDialog() {
