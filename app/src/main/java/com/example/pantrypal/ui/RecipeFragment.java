@@ -232,14 +232,30 @@ public class RecipeFragment extends Fragment {
             JSONArray recipes = new JSONArray(recipeInfo);
 
             if (recipes.length() > 0) {
-                JSONObject recipe = recipes.getJSONObject(0); // Assuming you want to display the first recipe
+                JSONObject recipe = recipes.getJSONObject(0);
                 builder.setTitle(recipe.getString("title"));
                 String image = recipe.getString("image");
                 int usedIngredientCount = recipe.getInt("usedIngredientCount");
                 int missedIngredientCount = recipe.getInt("missedIngredientCount");
 
-                // Create your custom view to display the recipe information
-                View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount);
+                // Parse and format the ingredient lists
+                StringBuilder usedIngredientsList = new StringBuilder("Used Ingredients:\n");
+                JSONArray usedIngredients = recipe.getJSONArray("usedIngredients");
+                for (int i = 0; i < usedIngredients.length(); i++) {
+                    JSONObject usedIngredient = usedIngredients.getJSONObject(i);
+                    String original = usedIngredient.getString("original");
+                    usedIngredientsList.append("• ").append(original).append("\n");
+                }
+
+                StringBuilder missedIngredientsList = new StringBuilder("Missed Ingredients:\n");
+                JSONArray missedIngredients = recipe.getJSONArray("missedIngredients");
+                for (int i = 0; i < missedIngredients.length(); i++) {
+                    JSONObject missedIngredient = missedIngredients.getJSONObject(i);
+                    String original = missedIngredient.getString("original");
+                    missedIngredientsList.append("• ").append(original).append("\n");
+                }
+
+                View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount, usedIngredientsList.toString(), missedIngredientsList.toString());
 
                 builder.setView(recipeView);
             }
@@ -261,18 +277,24 @@ public class RecipeFragment extends Fragment {
     }
 
 
-    private View getRecipeView(String imageUrl, int usedCount, int missedCount) {
+    private View getRecipeView(String imageUrl, int usedCount, int missedCount, String usedIngredients, String missedIngredients) {
         View recipeView = LayoutInflater.from(requireContext()).inflate(R.layout.recipe_popup_layout, null);
 
-        // Find and set the UI elements in your custom layout
+        // Find and set the UI elements
         ImageView imageView = recipeView.findViewById(R.id.imageView);
         TextView usedCountTextView = recipeView.findViewById(R.id.usedCountTextView);
         TextView missedCountTextView = recipeView.findViewById(R.id.missedCountTextView);
+        TextView usedIngredientsTextView = recipeView.findViewById(R.id.usedIngredientsTextView);
+        TextView missedIngredientsTextView = recipeView.findViewById(R.id.missedIngredientsTextView);
 
         // Load and display the image using Picasso
         Picasso.get().load(imageUrl).into(imageView);
         usedCountTextView.setText("Used Ingredients: " + usedCount);
         missedCountTextView.setText("Missed Ingredients: " + missedCount);
+
+        // Set the ingredient lists
+        usedIngredientsTextView.setText(usedIngredients);
+        missedIngredientsTextView.setText(missedIngredients);
 
         return recipeView;
     }

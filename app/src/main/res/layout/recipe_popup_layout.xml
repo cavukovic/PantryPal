@@ -11,9 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
-
-    android:contentDescription="Recipe Image"/>
-<!--    android:src="@drawable/placeholder_image"-->
+        android:contentDescription="Recipe Image"/>
 
     <TextView
         android:id="@+id/usedCountTextView"
@@ -29,4 +27,21 @@
         android:text="Missed Ingredients: 0"
         android:textSize="16sp"/>
 
+    <!-- Used Ingredients List -->
+    <TextView
+        android:id="@+id/usedIngredientsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Used Ingredients:"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <!-- Missed Ingredients List -->
+    <TextView
+        android:id="@+id/missedIngredientsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Missed Ingredients:"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 </LinearLayout>
