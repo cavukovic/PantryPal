@@ -52,6 +52,9 @@ public class RecipeFragment extends Fragment {
 
     private static final int INTERNET_PERMISSION_REQUEST_CODE = 1;
 
+    // TODO
+    // - add some way to save the recipe?
+    // - add the ability to click through a few recipe options?
 
     @Override
     public View onCreateView(
@@ -67,8 +70,7 @@ public class RecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.d("PantryPalDebug", "Recipe Fragment was created");
         super.onViewCreated(view, savedInstanceState);
-        //viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(RecipeViewModel.class);
+
         Activity activity = requireActivity();
         recipeViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(RecipeViewModel.class);
         pantryViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
@@ -185,7 +187,7 @@ public class RecipeFragment extends Fragment {
                         Log.d("RecipeFragment", "API response JSON: " + jsonResponse);
 
                         // Display the recipe information in a pop-up dialog
-                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse)); // Replace recipeInfo with the parsed recipe information
+                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse));
                     } else {
                         Log.e("RecipeFragment", "API request failed with code: " + response.code());
                     }
@@ -226,12 +228,12 @@ public class RecipeFragment extends Fragment {
     private void showRecipePopup(String recipeInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
 
-
         // Parse Json info
         try {
             JSONArray recipes = new JSONArray(recipeInfo);
 
             if (recipes.length() > 0) {
+                // Parse general recipe info
                 JSONObject recipe = recipes.getJSONObject(0);
                 builder.setTitle(recipe.getString("title"));
                 String image = recipe.getString("image");
@@ -256,7 +258,6 @@ public class RecipeFragment extends Fragment {
                 }
 
                 View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount, usedIngredientsList.toString(), missedIngredientsList.toString());
-
                 builder.setView(recipeView);
             }
         } catch (JSONException e) {
@@ -264,8 +265,6 @@ public class RecipeFragment extends Fragment {
             builder.setMessage("Failed to parse recipe data");
         }
 
-
-        //builder.setMessage(recipeInfo);
         builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
