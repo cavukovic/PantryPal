@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        FloatingActionButton cameraButton = (FloatingActionButton) findViewById(R.id.CameraFAB);
 
         // Set a listener for navigation item selection
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -56,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
 
                 if (itemId == R.id.nav_pantry) {
                     Log.d("PantryPalDebug", "Pantry was clicked");
-
+                    cameraButton.setVisibility(View.VISIBLE);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new PantryFragment())
                             .commit();
 
                 } else if (itemId == R.id.nav_recipe) {
                     Log.d("PantryPalDebug", "Recipe was clicked");
+                    cameraButton.setVisibility(View.GONE);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, new RecipeFragment())
                             .commit();
@@ -74,18 +76,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-
         // OnClickListener for the FAB
-        fab.setOnClickListener(new View.OnClickListener() {
+        cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d("PantryPalDebug", "FAB was clicked");
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new CameraFragment())
+                        .commit();
             }
-            // we will want to have this pull up the camera, then the user can scan the barcode
-            // then we will need to get the ingredient name and any other information
-            // from the barcode and the add that to the list the same way we did in the
-            // pantry fragment
         });
     }
 
