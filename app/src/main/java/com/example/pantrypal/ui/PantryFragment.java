@@ -45,25 +45,20 @@ PantryFragment extends Fragment implements FoodAdapter.OnItemClickListener{
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.d("PantryPalDebug", "Pantry Fragment was created");
         super.onViewCreated(view, savedInstanceState);
-        //viewModel = new ViewModelProvider(this).get(PantryViewModel.class);
-        //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(PantryViewModel.class);
         Activity activity = requireActivity();
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
 
         // Initialize RecyclerView and adapter
         RecyclerView foodRecyclerView = view.findViewById(R.id.foodRecyclerView);
         foodRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        //FoodAdapter adapter = new FoodAdapter(viewModel.getFoodItems(), this); // 'this' refers to the fragment
 
         // Observe LiveData for changes and update the adapter
         viewModel.getAllFoodItemsFromVm().observe(getViewLifecycleOwner(), foodItems ->
         {
             FoodAdapter adapter;
             if (foodItems != null && !foodItems.isEmpty()) {
-                //adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems);
                 adapter = new FoodAdapter((ArrayList<FoodItem>) foodItems, this);
             } else {
-                //adapter = new FoodAdapter(new ArrayList<>());
                 adapter = new FoodAdapter(new ArrayList<>(), this);
             }
             foodRecyclerView.setAdapter(adapter);

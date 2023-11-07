@@ -24,7 +24,7 @@
         android:layout_width="0dp"
         android:layout_margin="3dp"
         android:layout_height="wrap_content"
-        android:text="@string/add_recipe"
+        android:text="Add New Recipe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/delete_button"
         app:layout_constraintTop_toBottomOf="@+id/textview_first" />
@@ -36,6 +36,16 @@
         android:layout_height="wrap_content"
         android:text="@string/clear_recipes"
         app:layout_constraintStart_toEndOf="@+id/add_button"
+        app:layout_constraintEnd_toStartOf="@+id/generate_button"
+        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+
+    <Button
+        android:id="@+id/generate_button"
+        android:layout_width="0dp"
+        android:layout_margin="3dp"
+        android:layout_height="wrap_content"
+        android:text="Generate Recipe"
+        app:layout_constraintStart_toEndOf="@+id/delete_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview_first" />
 
