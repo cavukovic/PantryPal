@@ -1,0 +1,47 @@
+<!-- res/layout/recipe_popup_layout.xml -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="Recipe Image"/>
+
+    <TextView
+        android:id="@+id/usedCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Used Ingredients: 0"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/missedCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Missed Ingredients: 0"
+        android:textSize="16sp"/>
+
+    <!-- Used Ingredients List -->
+    <TextView
+        android:id="@+id/usedIngredientsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Used Ingredients:"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <!-- Missed Ingredients List -->
+    <TextView
+        android:id="@+id/missedIngredientsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Missed Ingredients:"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+</LinearLayout>

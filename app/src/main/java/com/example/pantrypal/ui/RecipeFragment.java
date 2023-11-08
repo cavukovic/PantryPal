@@ -32,6 +32,13 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.Manifest;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +52,9 @@ public class RecipeFragment extends Fragment {
 
     private static final int INTERNET_PERMISSION_REQUEST_CODE = 1;
 
+    // TODO
+    // - add some way to save the recipe?
+    // - add the ability to click through a few recipe options?
 
     @Override
     public View onCreateView(
@@ -60,8 +70,7 @@ public class RecipeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.d("PantryPalDebug", "Recipe Fragment was created");
         super.onViewCreated(view, savedInstanceState);
-        //viewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        //viewModel = new ViewModelProvider((ViewModelStoreOwner) this, new ViewModelProvider.NewInstanceFactory()).get(RecipeViewModel.class);
+
         Activity activity = requireActivity();
         recipeViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(RecipeViewModel.class);
         pantryViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
@@ -178,7 +187,7 @@ public class RecipeFragment extends Fragment {
                         Log.d("RecipeFragment", "API response JSON: " + jsonResponse);
 
                         // Display the recipe information in a pop-up dialog
-                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse)); // Replace recipeInfo with the parsed recipe information
+                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse));
                     } else {
                         Log.e("RecipeFragment", "API request failed with code: " + response.code());
                     }
@@ -218,11 +227,44 @@ public class RecipeFragment extends Fragment {
 
     private void showRecipePopup(String recipeInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Generated Recipe");
 
         // Parse Json info
+        try {
+            JSONArray recipes = new JSONArray(recipeInfo);
 
-        //builder.setMessage(recipeInfo);
+            if (recipes.length() > 0) {
+                // Parse general recipe info
+                JSONObject recipe = recipes.getJSONObject(0);
+                builder.setTitle(recipe.getString("title"));
+                String image = recipe.getString("image");
+                int usedIngredientCount = recipe.getInt("usedIngredientCount");
+                int missedIngredientCount = recipe.getInt("missedIngredientCount");
+
+                // Parse and format the ingredient lists
+                StringBuilder usedIngredientsList = new StringBuilder("Used Ingredients:\n");
+                JSONArray usedIngredients = recipe.getJSONArray("usedIngredients");
+                for (int i = 0; i < usedIngredients.length(); i++) {
+                    JSONObject usedIngredient = usedIngredients.getJSONObject(i);
+                    String original = usedIngredient.getString("original");
+                    usedIngredientsList.append("• ").append(original).append("\n");
+                }
+
+                StringBuilder missedIngredientsList = new StringBuilder("Missed Ingredients:\n");
+                JSONArray missedIngredients = recipe.getJSONArray("missedIngredients");
+                for (int i = 0; i < missedIngredients.length(); i++) {
+                    JSONObject missedIngredient = missedIngredients.getJSONObject(i);
+                    String original = missedIngredient.getString("original");
+                    missedIngredientsList.append("• ").append(original).append("\n");
+                }
+
+                View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount, usedIngredientsList.toString(), missedIngredientsList.toString());
+                builder.setView(recipeView);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            builder.setMessage("Failed to parse recipe data");
+        }
+
         builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -231,6 +273,29 @@ public class RecipeFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+
+    private View getRecipeView(String imageUrl, int usedCount, int missedCount, String usedIngredients, String missedIngredients) {
+        View recipeView = LayoutInflater.from(requireContext()).inflate(R.layout.recipe_popup_layout, null);
+
+        // Find and set the UI elements
+        ImageView imageView = recipeView.findViewById(R.id.imageView);
+        TextView usedCountTextView = recipeView.findViewById(R.id.usedCountTextView);
+        TextView missedCountTextView = recipeView.findViewById(R.id.missedCountTextView);
+        TextView usedIngredientsTextView = recipeView.findViewById(R.id.usedIngredientsTextView);
+        TextView missedIngredientsTextView = recipeView.findViewById(R.id.missedIngredientsTextView);
+
+        // Load and display the image using Picasso
+        Picasso.get().load(imageUrl).into(imageView);
+        usedCountTextView.setText("Used Ingredients: " + usedCount);
+        missedCountTextView.setText("Missed Ingredients: " + missedCount);
+
+        // Set the ingredient lists
+        usedIngredientsTextView.setText(usedIngredients);
+        missedIngredientsTextView.setText(missedIngredients);
+
+        return recipeView;
     }
 
     private void showAddRecipeItemDialog() {
