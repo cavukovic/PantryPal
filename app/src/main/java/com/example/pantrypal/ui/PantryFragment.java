@@ -1,10 +1,8 @@
 package com.example.pantrypal.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,14 +21,7 @@ import com.example.pantrypal.R;
 import com.example.pantrypal.databinding.FragmentFirstBinding;
 import com.example.pantrypal.domain.FoodItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class
 
@@ -144,66 +134,6 @@ PantryFragment extends Fragment implements FoodAdapter.OnItemClickListener{
         });
 
         builder.show();
-    }
-
-    private void fetchFood(String Upc) {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            // Permission is already granted; you can make the network request.
-            //List<FoodItem> pantryData = pantryViewModel.getAllFoodItemsFromVm().getValue();
-
-            /*
-            if (pantryData != null && !pantryData.isEmpty()) {
-                // Build a list of ingredients from pantryData
-                List<String> ingredients = new ArrayList<>();
-                for (FoodItem foodItem : pantryData) {
-                    ingredients.add(foodItem.getName());
-                }
-             */
-
-            // URL
-            String Url = "https://api.upcdatabase.org/product/" + Upc;
-
-            // Make a network request to the UPC Database API to get recipes
-            OkHttpClient client = new OkHttpClient();
-
-            Log.d("URL", url);
-
-            Request request = new Request.Builder()
-                    .url(url)
-                    .get()
-                    .build();
-
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    // Handle the network request failure
-                    Log.e("RecipeFragment", "Network request failed: " + e.getMessage());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-
-                        String jsonResponse = response.body().string();
-                        Log.d("RecipeFragment", "API response JSON: " + jsonResponse);
-
-                        // Display the recipe information in a pop-up dialog
-                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse)); // Replace recipeInfo with the parsed recipe information
-                    } else {
-                        Log.e("RecipeFragment", "API request failed with code: " + response.code());
-                    }
-                }
-            });
-            /*
-            } else {
-                Log.d("PantryPalDebug", "Pantry data is empty.");
-            }
-*/
-        } else {
-            Log.d("request", "perm not granted");
-            // Permission is not granted; request it from the user.
-            requestInternetPermission();
-        }
     }
 
     @Override
