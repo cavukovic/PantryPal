@@ -8,7 +8,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.LiveData;
 
 import android.util.Log;
 import android.util.SparseArray;
@@ -31,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -52,6 +55,8 @@ public class CameraFragment extends Fragment {
     private String name;
     private int quantity;
     private String unit;
+    private LiveData<List<FoodItem>> pantryLiveData;
+    private List<FoodItem> foodItemList;
 
     public CameraFragment() {
         // Required empty public constructor
@@ -72,7 +77,15 @@ public class CameraFragment extends Fragment {
         initialiseDetectorsAndSources();
         Activity activity = requireActivity();
         viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(activity.getApplication()).create(PantryViewModel.class);
-        fetchFoodItem(barcodeData);
+        pantryLiveData = viewModel.getAllFoodItemsFromVm();
+
+        pantryLiveData.observe(getViewLifecycleOwner(), itemsList -> {
+            // Access the List<Items> here
+            if (itemsList != null) {
+                foodItemList = itemsList;
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -157,7 +170,6 @@ public class CameraFragment extends Fragment {
 
     private void fetchFoodItem(String barcodeData) {
 
-        barcodeData = "039400017004";
         if (barcodeData != null && !barcodeData.trim().isEmpty()) {
             OkHttpClient client = new OkHttpClient();
             //Log.d("barcodeData", barcodeData);
@@ -182,27 +194,46 @@ public class CameraFragment extends Fragment {
                         //Find the name of the product
                         String jsonResponseString = response.body().string();
 
-                        String startTag = "\"title\": \"";
-                        String endTag = "\",\n    \"alias\":";
+                        String startStr = "\"title\": \"";
+                        String endStr = "\",\n    \"alias\":";
 
-                        int startIndex = jsonResponseString.indexOf(startTag);
-                        int endIndex = jsonResponseString.indexOf(endTag);
+                        int startIndex = jsonResponseString.indexOf(startStr);
+                        int endIndex = jsonResponseString.indexOf(endStr);
                         String capturedText = "";
                         if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
-                            capturedText = jsonResponseString.substring(startIndex + startTag.length(), endIndex);
+                            capturedText = jsonResponseString.substring(startIndex + startStr.length(), endIndex);
                             System.out.println("Captured Text: " + capturedText);
                         } else {
-                            System.out.println("Tags not found or in the wrong order");
+                            System.out.println("Strs not found or in the wrong order");
                         }
 
                         //Store the product
                         name = capturedText;
 
                         if (!name.isEmpty()) {
-                            viewModel.insertFoodItem(new FoodItem(name, 1, "Unit"));
+
+                            if (foodItemList != null) {
+                                Log.d("Made it here", "made it here");
+                                for (int i = 0; i < foodItemList.size(); i++) {
+                                    FoodItem fItem = foodItemList.get(i);
+                                    if (fItem.getName().equals(name)) {
+                                        quantity = fItem.getQuantity() + 1;
+                                        unit = fItem.getUnit();
+                                        viewModel.deleteFoodItem(name);
+                                    }
+                                }
+                            }
+                            if (unit == null || unit.equals("")) {
+                                unit = "Unit";
+                                quantity = 1;
+                            }
+                            viewModel.insertFoodItem(new FoodItem(name, quantity, unit));
+
                         }
 
                         name = "";
+                        quantity = 0;
+                        unit = "";
 
                         Log.d("CameraFragment", "API response JSON: " + jsonResponseString);
 

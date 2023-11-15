@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "FoodItem_table")
 public class FoodItem {
-    //TODO Change primary key to UPC
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+
+    //Should we change primary key to UPC?
     @NonNull
+    @PrimaryKey
     private String name;
 
     private int quantity;
@@ -37,14 +37,6 @@ public class FoodItem {
 
     public void setName(@NonNull String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getQuantity() {
