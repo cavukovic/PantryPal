@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClickListener{
 
     private FragmentSecondBinding binding;
     private RecipeViewModel recipeViewModel;
@@ -85,9 +85,9 @@ public class RecipeFragment extends Fragment {
         {
             RecipeAdapter adapter;
             if (recipeItems != null && !recipeItems.isEmpty()) {
-                adapter = new RecipeAdapter((ArrayList<RecipeItem>) recipeItems);
+                adapter = new RecipeAdapter((ArrayList<RecipeItem>) recipeItems, this);
             } else {
-                adapter = new RecipeAdapter(new ArrayList<>());
+                adapter = new RecipeAdapter(new ArrayList<>(), this);
             }
             recipeRecyclerView.setAdapter(adapter);
         });
@@ -235,7 +235,8 @@ public class RecipeFragment extends Fragment {
             if (recipes.length() > 0) {
                 // Parse general recipe info
                 JSONObject recipe = recipes.getJSONObject(0);
-                builder.setTitle(recipe.getString("title"));
+                String title = recipe.getString("title");
+                builder.setTitle(title);
                 String image = recipe.getString("image");
                 int usedIngredientCount = recipe.getInt("usedIngredientCount");
                 int missedIngredientCount = recipe.getInt("missedIngredientCount");
@@ -259,6 +260,7 @@ public class RecipeFragment extends Fragment {
 
                 View recipeView = getRecipeView(image, usedIngredientCount, missedIngredientCount, usedIngredientsList.toString(), missedIngredientsList.toString());
                 builder.setView(recipeView);
+                recipeViewModel.insertRecipeItem(new RecipeItem(title, image, usedIngredientCount, missedIngredientCount));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -341,7 +343,7 @@ public class RecipeFragment extends Fragment {
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //recipeViewModel.deleteRecipeItem(itemName);
+                recipeViewModel.deleteRecipeItem(itemName);
             }
         });
 
@@ -353,6 +355,11 @@ public class RecipeFragment extends Fragment {
         });
 
         builder.show();
+    }
+
+    @Override
+    public void onItemClick(String itemName) {
+        showDeleteRecipeItemDialog(itemName);
     }
 
     @Override

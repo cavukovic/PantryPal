@@ -20,6 +20,9 @@ public interface RecipeItemDao {
     @Query("SELECT * from RecipeItem_table ORDER By name Asc")
     LiveData<List<RecipeItem>> getAllRecipeItems();
 
+    @Query("DELETE FROM RecipeItem_table WHERE name = :itemName")
+    void deleteRecipeItem(String itemName);
+
     @Query("DELETE from RecipeItem_table")
     void deleteAll();
 }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pantrypal.R;
+import com.example.pantrypal.domain.FoodItem;
 import com.example.pantrypal.domain.RecipeItem;
 
 import java.util.ArrayList;
@@ -17,8 +18,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     ArrayList<RecipeItem> recipeArrayList;
 
-    public RecipeAdapter(ArrayList<RecipeItem> recipes) {
+    public interface OnItemClickListener {
+        void onItemClick(String itemName);
+    }
+
+    private OnItemClickListener clickListener;
+
+    public RecipeAdapter(ArrayList<RecipeItem> recipes, RecipeAdapter.OnItemClickListener clickListener) {
         this.recipeArrayList = recipes;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -32,6 +40,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         holder.tvRecipeName.setText(recipeArrayList.get(position).getName());
+        RecipeItem recipeItem = recipeArrayList.get(position);
+        holder.tvRecipeName.setText(recipeItem.getName());
+        holder.tvRecipeName.setText(recipeItem.getName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onItemClick(recipeItem.getName());
+            }
+        });
     }
 
     @Override
