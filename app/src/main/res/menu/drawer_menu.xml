@@ -2,8 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_pantry"
-        android:title="Pantry" />
+        android:title="Pantry"
+        android:fontFamily="@font/hyperlegible_font"/>
     <item
         android:id="@+id/nav_recipe"
-        android:title="Recipe" />
+        android:title="Recipe"
+        android:fontFamily="@font/hyperlegible_font"/>
 </menu>

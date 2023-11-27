@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -86,7 +87,7 @@ PantryFragment extends Fragment implements FoodAdapter.OnItemClickListener{
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View textEntryView = inflater.inflate(R.layout.dialog_addfooditem, null);
         builder.setView(textEntryView);
-        builder.setTitle("Add Food Item");
+        //builder.setTitle("Add Food Item");
 
         final EditText nameInput = textEntryView.findViewById(R.id.AFDNameEditText);
         final EditText quantityInput = textEntryView.findViewById(R.id.AFDQuantityEditText);
@@ -116,8 +117,13 @@ PantryFragment extends Fragment implements FoodAdapter.OnItemClickListener{
 
     private void showDeleteFoodItemDialog(final String itemName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete Food Item");
-        builder.setMessage("Are you sure you want to delete this item: " + itemName + "?");
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        final View textView = inflater.inflate(R.layout.dialog_deletefooditem, null);
+        builder.setView(textView);
+        //builder.setTitle("Delete Food Item");
+
+        TextView message = textView.findViewById(R.id.DFImessage);
+        message.append("Are you sure you want to delete this item: " + itemName + "?");
 
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override

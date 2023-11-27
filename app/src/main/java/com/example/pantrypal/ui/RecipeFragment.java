@@ -235,6 +235,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
             if (recipes.length() > 0) {
                 // Parse general recipe info
                 JSONObject recipe = recipes.getJSONObject(0);
+                // make title hyperlegible font
                 String title = recipe.getString("title");
                 builder.setTitle(title);
                 String image = recipe.getString("image");
@@ -305,7 +306,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View textEntryView = inflater.inflate(R.layout.dialog_addrecipeitem, null);
         builder.setView(textEntryView);
-        builder.setTitle("Add Recipe Item");
+        //builder.setTitle("Add Recipe Item");
 
         final EditText nameInput = textEntryView.findViewById(R.id.AFDNameEditText);
         final EditText imgUrlInput = textEntryView.findViewById(R.id.AFDImgUrlEditText);
@@ -337,8 +338,14 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
 
     private void showDeleteRecipeItemDialog(final String itemName) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        builder.setTitle("Delete Recipe Item");
-        builder.setMessage("Are you sure you want to delete this item: " + itemName + "?");
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        final View textView = inflater.inflate(R.layout.dialog_deleterecipeitem, null);
+        builder.setView(textView);
+
+        //builder.setTitle("Delete Recipe Item");
+        TextView message = textView.findViewById(R.id.DRImessage);
+        message.append("Are you sure you want to delete this item: " + itemName + "?");
+        //builder.setMessage("Are you sure you want to delete this item: " + itemName + "?");
 
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override

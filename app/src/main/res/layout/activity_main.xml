@@ -28,7 +28,8 @@
                 android:layout_gravity="center_horizontal"
                 android:textSize="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:fontFamily="@font/hyperlegible_font"/>
         </FrameLayout>
 
 <!--    <include layout="@layout/content_main"/>-->

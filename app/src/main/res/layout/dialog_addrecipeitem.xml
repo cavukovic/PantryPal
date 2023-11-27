@@ -4,6 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Recipe Item"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:fontFamily="@font/hyperlegible_font"/>
+
+
     <EditText
         android:id="@+id/AFDNameEditText"
         android:layout_width="match_parent"
@@ -11,7 +22,8 @@
         android:autofillHints="Recipe Name"
         android:ems="10"
         android:hint="@string/recipe_name"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <EditText
         android:id="@+id/AFDImgUrlEditText"
@@ -20,7 +32,8 @@
         android:autofillHints="Image URL"
         android:ems="10"
         android:hint="@string/image_url"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <EditText
         android:id="@+id/AFDUsedIngCountEditText"
@@ -29,7 +42,8 @@
         android:autofillHints="Used Ingredient Count"
         android:ems="10"
         android:hint="@string/used_ingredient_count"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <EditText
         android:id="@+id/AFDMissedIngCountEditText"
@@ -38,6 +52,7 @@
         android:autofillHints="Missed Ingredient Count"
         android:ems="10"
         android:hint="@string/missed_ingredient_count"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
 </LinearLayout>

@@ -4,6 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Food Item"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:fontFamily="@font/hyperlegible_font"/>
+
     <EditText
         android:id="@+id/AFDNameEditText"
         android:layout_width="match_parent"
@@ -11,7 +21,8 @@
         android:autofillHints="Item Name"
         android:ems="10"
         android:hint="@string/itemName"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <EditText
         android:id="@+id/AFDQuantityEditText"
@@ -20,7 +31,8 @@
         android:autofillHints="number"
         android:ems="10"
         android:hint="@string/quantity"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <EditText
         android:id="@+id/AFDUnitEditText"
@@ -29,6 +41,7 @@
         android:autofillHints="number"
         android:ems="10"
         android:hint="@string/unit"
-        android:inputType="text" />
+        android:inputType="text"
+        android:fontFamily="@font/hyperlegible_font"/>
 
 </LinearLayout>

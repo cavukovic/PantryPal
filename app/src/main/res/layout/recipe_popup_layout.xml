@@ -18,14 +18,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Used Ingredients: 0"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:fontFamily="@font/hyperlegible_font"
+        />
 
     <TextView
         android:id="@+id/missedCountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Missed Ingredients: 0"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <!-- Used Ingredients List -->
     <TextView
@@ -34,7 +37,8 @@
         android:layout_height="wrap_content"
         android:text="Used Ingredients:"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <!-- Missed Ingredients List -->
     <TextView
@@ -43,5 +47,6 @@
         android:layout_height="wrap_content"
         android:text="Missed Ingredients:"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:fontFamily="@font/hyperlegible_font"/>
 </LinearLayout>

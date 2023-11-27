@@ -17,7 +17,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/add_button" />
+        app:layout_constraintBottom_toTopOf="@+id/add_button"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <Button
         android:id="@+id/add_button"
@@ -27,7 +28,8 @@
         android:text="Add New Recipe"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/delete_button"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@+id/textview_first"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <Button
         android:id="@+id/delete_button"
@@ -37,7 +39,8 @@
         android:text="@string/clear_recipes"
         app:layout_constraintStart_toEndOf="@+id/add_button"
         app:layout_constraintEnd_toStartOf="@+id/generate_button"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@+id/textview_first"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <Button
         android:id="@+id/generate_button"
@@ -47,7 +50,8 @@
         android:text="Generate Recipe"
         app:layout_constraintStart_toEndOf="@+id/delete_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_first" />
+        app:layout_constraintTop_toBottomOf="@+id/textview_first"
+        android:fontFamily="@font/hyperlegible_font"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipeRecyclerView"
