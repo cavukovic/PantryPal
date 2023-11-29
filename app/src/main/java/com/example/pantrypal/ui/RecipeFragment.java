@@ -3,6 +3,7 @@ package com.example.pantrypal.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,10 +53,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
 
     private static final int INTERNET_PERMISSION_REQUEST_CODE = 1;
 
-    // TODO
-    // - add some way to save the recipe?
-    // - add the ability to click through a few recipe options?
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -98,8 +95,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
         binding.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // For now this allows the user to type in an ingredient
-                // we will probably want to keep this button
                 showAddRecipeItemDialog();
             }
         });
@@ -132,39 +127,45 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
 
     private void generateRecipes() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            // Permission is already granted; you can make the network request.
-        List<FoodItem> pantryData = pantryViewModel.getAllFoodItemsFromVm().getValue();
+            List<FoodItem> pantryData = pantryViewModel.getAllFoodItemsFromVm().getValue();
 
-        if (pantryData != null && !pantryData.isEmpty()) {
-            // Build a list of ingredients from pantryData
-            List<String> ingredients = new ArrayList<>();
-            for (FoodItem foodItem : pantryData) {
-                ingredients.add(foodItem.getName());
+            if (pantryData != null && !pantryData.isEmpty()) {
+                List<String> ingredients = new ArrayList<>();
+                for (FoodItem foodItem : pantryData) {
+                    ingredients.add(foodItem.getName());
+                }
+
+                String baseUrl = "https://api.spoonacular.com/recipes/findByIngredients";
+                String ingredientsParam = String.join(",", ingredients);
+                int numberOfRecipes = 1;
+                boolean limitLicense = true;
+                int ranking = 1;
+                boolean ignorePantry = true;
+
+                String url = baseUrl + "?ingredients=" + ingredientsParam +
+                        "&number=" + numberOfRecipes +
+                        "&limitLicense=" + limitLicense +
+                        "&ranking=" + ranking +
+                        "&ignorePantry=" + ignorePantry +
+                        "&apiKey=21d53be8528f40f09edfdbcc6747360a";
+
+                new NetworkRequestAsyncTask().execute(url);
+            } else {
+                Log.d("PantryPalDebug", "Pantry data is empty.");
             }
 
-            // Base URL
-            String baseUrl = "https://api.spoonacular.com/recipes/findByIngredients";
-            // Ingredients parameter (comma-separated list)
-            String ingredientsParam = String.join(",", ingredients);
-            // Number of recipes to return
-            int numberOfRecipes = 1;
-            // Limit license, Whether the recipes should have an open license that allows display with proper attribution.
-            boolean limitLicense = true;
-            // Ranking (1 for maximize used ingredients, 2 for minimize missing ingredients)
-            int ranking = 1;
-            // Ignore common pantry items (water, flour, etc)
-            boolean ignorePantry = true;
+        } else {
+            Log.d("request", "perm not granted");
+            requestInternetPermission();
+        }
+    }
 
-            String url = baseUrl + "?ingredients=" + ingredientsParam +
-                    "&number=" + numberOfRecipes +
-                    "&limitLicense=" + limitLicense +
-                    "&ranking=" + ranking +
-                    "&ignorePantry=" + ignorePantry+
-                    "&apiKey=21d53be8528f40f09edfdbcc6747360a";
+    private class NetworkRequestAsyncTask extends AsyncTask<String, Void, String> {
 
-            // Make a network request to the Spoonacular API to get recipes
+        @Override
+        protected String doInBackground(String... urls) {
             OkHttpClient client = new OkHttpClient();
-
+            String url = urls[0];
             Log.d("URL", url);
 
             Request request = new Request.Builder()
@@ -172,35 +173,27 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
                     .get()
                     .build();
 
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    // Handle the network request failure
-                    Log.e("RecipeFragment", "Network request failed: " + e.getMessage());
+            try {
+                Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    return response.body().string();
+                } else {
+                    Log.e("RecipeFragment", "API request failed with code: " + response.code());
                 }
+            } catch (IOException e) {
+                Log.e("RecipeFragment", "Network request failed: " + e.getMessage());
+            }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful()) {
-
-                        String jsonResponse = response.body().string();
-                        Log.d("RecipeFragment", "API response JSON: " + jsonResponse);
-
-                        // Display the recipe information in a pop-up dialog
-                        getActivity().runOnUiThread(() -> showRecipePopup(jsonResponse));
-                    } else {
-                        Log.e("RecipeFragment", "API request failed with code: " + response.code());
-                    }
-                }
-            });
-        } else {
-            Log.d("PantryPalDebug", "Pantry data is empty.");
+            return null;
         }
 
-        } else {
-            Log.d("request", "perm not granted");
-            // Permission is not granted; request it from the user.
-            requestInternetPermission();
+        @Override
+        protected void onPostExecute(String jsonResponse) {
+            super.onPostExecute(jsonResponse);
+            if (jsonResponse != null) {
+                Log.d("RecipeFragment", "API response JSON: " + jsonResponse);
+                showRecipePopup(jsonResponse);
+            }
         }
     }
 
@@ -306,7 +299,6 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         final View textEntryView = inflater.inflate(R.layout.dialog_addrecipeitem, null);
         builder.setView(textEntryView);
-        //builder.setTitle("Add Recipe Item");
 
         final EditText nameInput = textEntryView.findViewById(R.id.AFDNameEditText);
         final EditText imgUrlInput = textEntryView.findViewById(R.id.AFDImgUrlEditText);
@@ -342,10 +334,8 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.OnItemClic
         final View textView = inflater.inflate(R.layout.dialog_deleterecipeitem, null);
         builder.setView(textView);
 
-        //builder.setTitle("Delete Recipe Item");
         TextView message = textView.findViewById(R.id.DRImessage);
         message.append("Are you sure you want to delete this item: " + itemName + "?");
-        //builder.setMessage("Are you sure you want to delete this item: " + itemName + "?");
 
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
