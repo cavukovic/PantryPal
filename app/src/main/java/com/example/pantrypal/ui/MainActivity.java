@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
+
+
         TextView textViewMain = findViewById(R.id.textview_main);
 
         // Set up the navigation drawer toggle button in our toolbar
